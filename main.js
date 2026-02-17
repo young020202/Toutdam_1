@@ -14,8 +14,18 @@ const sizeChartAverageNotice = document.getElementById("sizeChartAverageNotice")
 const sizeChartImage = document.getElementById("sizeChartImage");
 const sizeChartImageWrap = document.getElementById("sizeChartImageWrap");
 const toggleChartImageBtn = document.getElementById("toggleChartImage");
+const openProfileFormBtn = document.getElementById("openProfileFormBtn");
+const profileFormWrap = document.getElementById("profileFormWrap");
+const petNameInput = document.getElementById("petNameInput");
+const petPhotoInput = document.getElementById("petPhotoInput");
+const makeProfileCardBtn = document.getElementById("makeProfileCardBtn");
+const petProfileCard = document.getElementById("petProfileCard");
+const petProfileImage = document.getElementById("petProfileImage");
+const petProfileTitle = document.getElementById("petProfileTitle");
+const petProfileMeta = document.getElementById("petProfileMeta");
 
 const chartData = window.SIZE_CHART_DATA;
+let latestRecommendation = null;
 
 function buildSizeChartTable() {
   const head = document.createElement("thead");
@@ -116,6 +126,11 @@ function renderTips(input, recommendation) {
   });
 }
 
+function formatMeasure(value) {
+  const n = Number(value);
+  return Number.isInteger(n) ? String(n) : n.toFixed(1);
+}
+
 sizeForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -133,11 +148,54 @@ sizeForm.addEventListener("submit", (event) => {
 
   if (!recommendation.inRange) {
     resultText.textContent = `${petLabel} 측정 기준 현재 입력 몸무게(${input.weight}kg)는 평균값 추천 범위(0~10kg) 밖입니다. 평균값 기준으로는 애매할 수 있어 문의를 권장합니다.`;
+    latestRecommendation = null;
+    openProfileFormBtn.disabled = true;
+    profileFormWrap.hidden = true;
+    petProfileCard.hidden = true;
   } else {
     resultText.textContent = `${petLabel} 측정 기준 추천 사이즈는 ${recommendation.size} 입니다. (기준: 체중 ${input.weight}kg / 등 ${input.backLength}cm / 가슴 ${input.chest}cm / 목 ${input.neck}cm)`;
+    latestRecommendation = {
+      weight: input.weight,
+      chest: input.chest,
+      neck: input.neck,
+      backLength: input.backLength,
+      size: recommendation.size,
+    };
+    openProfileFormBtn.disabled = false;
   }
 
   renderTips(input, recommendation);
+});
+
+openProfileFormBtn.addEventListener("click", () => {
+  if (!latestRecommendation) return;
+  profileFormWrap.hidden = !profileFormWrap.hidden;
+});
+
+makeProfileCardBtn.addEventListener("click", () => {
+  if (!latestRecommendation) {
+    alert("먼저 맞춤 사이즈 추천을 받아주세요.");
+    return;
+  }
+
+  const imageFile = petPhotoInput.files?.[0];
+  if (!imageFile) {
+    alert("아이 사진을 넣어주세요.");
+    return;
+  }
+
+  const petName = (petNameInput.value || "").trim() || "아이이름";
+  const imageUrl = URL.createObjectURL(imageFile);
+
+  petProfileImage.src = imageUrl;
+  petProfileTitle.textContent = `사랑하는 뚜다미, ${petName}`;
+  petProfileMeta.textContent =
+    `${formatMeasure(latestRecommendation.weight)}kg/` +
+    `가슴둘레${formatMeasure(latestRecommendation.chest)}cm/` +
+    `목둘레${formatMeasure(latestRecommendation.neck)}cm/` +
+    `등길이${formatMeasure(latestRecommendation.backLength)}cm/` +
+    `${latestRecommendation.size}사이즈 착용`;
+  petProfileCard.hidden = false;
 });
 
 toggleChartImageBtn.addEventListener("click", toggleChartImage);

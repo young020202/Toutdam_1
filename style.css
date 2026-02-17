@@ -166,6 +166,63 @@ select:focus {
   gap: 14px;
 }
 
+.card-actions {
+  margin-top: 8px;
+}
+
+.profile-form-wrap {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.pet-profile-card {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fff, #fff4f8);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.heart-frame {
+  width: 212px;
+  height: 194px;
+  padding: 8px;
+  background: linear-gradient(145deg, #ff9ec4, #ff74ab);
+  clip-path: polygon(50% 95%, 7% 60%, 7% 34%, 22% 17%, 36% 17%, 50% 31%, 64% 17%, 78% 17%, 93% 34%, 93% 60%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 26px rgba(229, 79, 143, 0.24);
+}
+
+.heart-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  clip-path: polygon(50% 95%, 7% 60%, 7% 34%, 22% 17%, 36% 17%, 50% 31%, 64% 17%, 78% 17%, 93% 34%, 93% 60%);
+  background: #fff;
+}
+
+.pet-profile-title {
+  margin: 0;
+  color: #d43478;
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.pet-profile-meta {
+  margin: 0;
+  color: #5b3045;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
 .chart-average-notice {
   margin: 0;
   padding: 11px 13px;

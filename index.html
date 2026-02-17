@@ -1,830 +1,122 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>뚜담펫 | 우리 아이 연필 스케치 만들기</title>
-  <meta name="description" content="뚜담펫 toutdampet - 반려동물 라이프스타일 브랜드. 우리 아이 사진을 연필 스케치로 바꿔보세요!" />
-
-  <style>
-    :root{
-      --bg1:#ffe9f1;
-      --bg2:#fff7fb;
-      --card:#ffffffcc;
-      --stroke:#f7c1d4;
-      --stroke2:#f4a8c5;
-      --text:#2b2b2b;
-      --muted:#6b6b6b;
-      --brand:#e84b87;
-      --brand2:#ff6aa2;
-      --shadow: 0 14px 40px rgba(232,75,135,.14);
-      --radius: 18px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", Arial, sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 20% 0%, #ffd6e6 0%, transparent 60%),
-        radial-gradient(900px 500px at 90% 40%, #ffdff0 0%, transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-      min-height:100vh;
-      padding:28px 16px 60px;
-    }
-    .wrap{max-width:980px;margin:0 auto}
-    .hero{
-      background:var(--card);
-      border:1px solid rgba(244,168,197,.55);
-      box-shadow:var(--shadow);
-      border-radius:var(--radius);
-      padding:22px 22px 18px;
-      backdrop-filter: blur(8px);
-    }
-    .brandline{
-      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-      margin-bottom:6px;
-    }
-    .pill{
-      font-weight:800;
-      letter-spacing:.12em;
-      font-size:12px;
-      color:var(--brand);
-      background:#fff;
-      border:1px solid rgba(244,168,197,.7);
-      padding:6px 10px;
-      border-radius:999px;
-    }
-    h1{
-      margin:0;
-      font-size:24px;
-      letter-spacing:-.02em;
-    }
-    .sub{
-      margin:8px 0 0;
-      color:var(--muted);
-      line-height:1.6;
-      font-size:14px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:16px;
-      margin-top:14px;
-    }
-    @media (max-width: 900px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    .card{
-      background:var(--card);
-      border:1px solid rgba(244,168,197,.55);
-      box-shadow:var(--shadow);
-      border-radius:var(--radius);
-      padding:16px;
-      backdrop-filter: blur(8px);
-    }
-    .card h2{
-      margin:0 0 10px;
-      font-size:16px;
-      letter-spacing:-.01em;
-    }
-    label{
-      display:block;
-      font-size:13px;
-      color:#444;
-      margin:12px 0 6px;
-      font-weight:600;
-    }
-    input[type="file"], input[type="range"]{
-      width:100%;
-    }
-    .hint{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:6px;
-      line-height:1.5;
-    }
-    .row{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      margin-top:14px;
-    }
-    .btn{
-      border:0;
-      padding:12px 14px;
-      border-radius:14px;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .06s ease, filter .15s ease;
-      text-decoration:none;
-      display:inline-flex;align-items:center;justify-content:center;
-      gap:10px;
-      user-select:none;
-    }
-    .btn:active{transform:translateY(1px)}
-    .btn-primary{
-      color:white;
-      background: linear-gradient(90deg, var(--brand), var(--brand2));
-      box-shadow: 0 12px 26px rgba(232,75,135,.25);
-    }
-    .btn-ghost{
-      color:var(--brand);
-      background:#fff;
-      border:1px solid rgba(244,168,197,.8);
-    }
-    .btn-wide{flex:1; min-width:220px;}
-    .mini{
-      font-size:12px;
-      color:var(--muted);
-      margin-top:10px;
-    }
-
-    .previewWrap{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    @media (max-width: 520px){
-      .previewWrap{grid-template-columns:1fr}
-    }
-    .preview{
-      border-radius:16px;
-      overflow:hidden;
-      background:#fff;
-      border:1px dashed rgba(244,168,197,.9);
-      min-height:220px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-    }
-    .preview .tag{
-      position:absolute;
-      top:10px; left:10px;
-      font-size:12px;
-      font-weight:900;
-      color:var(--brand);
-      background:#fff;
-      border:1px solid rgba(244,168,197,.7);
-      padding:6px 10px;
-      border-radius:999px;
-    }
-    canvas, img{
-      max-width:100%;
-      max-height:360px;
-      display:block;
-    }
-
-    .products{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-      margin-top:10px;
-    }
-    .pItem{
-      display:flex; gap:12px; align-items:center;
-      background:#fff;
-      border:1px solid rgba(244,168,197,.6);
-      border-radius:16px;
-      padding:10px;
-      text-decoration:none;
-      color:inherit;
-      transition: transform .06s ease, box-shadow .15s ease;
-    }
-    .pItem:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(232,75,135,.12);
-    }
-    .thumb{
-      width:64px;height:64px;border-radius:14px;flex:0 0 auto;
-      border:1px solid rgba(244,168,197,.55);
-      overflow:hidden;background:#fff;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .thumb img{width:100%;height:100%;object-fit:cover}
-    .pMeta{min-width:0}
-    .pTitle{
-      font-weight:900;
-      font-size:14px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      margin:0;
-    }
-    .pDesc{
-      margin:4px 0 0;
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .footerNote{
-      margin-top:14px;
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.6;
-    }
-    .divider{height:1px;background:rgba(244,168,197,.45);margin:12px 0}
-
-    .fitCard{margin-top:16px}
-    .fitGrid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap:10px;
-    }
-    @media (max-width: 700px){
-      .fitGrid{grid-template-columns:1fr}
-    }
-    .fitResult{
-      margin-top:12px;
-      background:#fff;
-      border:1px solid rgba(244,168,197,.7);
-      border-radius:14px;
-      padding:12px;
-    }
-    .fitResultText{
-      margin:0;
-      font-size:14px;
-      font-weight:700;
-      line-height:1.5;
-      color:#5a1f3b;
-    }
-    .profilePanel{
-      margin-top:12px;
-      padding-top:8px;
-      border-top:1px dashed rgba(244,168,197,.7);
-    }
-    .loveCard{
-      margin-top:14px;
-      background:#fff;
-      border:1px solid rgba(244,168,197,.75);
-      border-radius:16px;
-      padding:16px;
-      display:grid;
-      justify-items:center;
-      gap:10px;
-    }
-    .heartFrame{
-      width:210px;
-      height:190px;
-      background: linear-gradient(145deg, #ff9dc4, #ff77ac);
-      padding:8px;
-      clip-path: polygon(50% 95%, 7% 60%, 7% 34%, 22% 17%, 36% 17%, 50% 31%, 64% 17%, 78% 17%, 93% 34%, 93% 60%);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow: 0 12px 26px rgba(232,75,135,.25);
-    }
-    .heartFrame img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      clip-path: polygon(50% 95%, 7% 60%, 7% 34%, 22% 17%, 36% 17%, 50% 31%, 64% 17%, 78% 17%, 93% 34%, 93% 60%);
-      background:#fff;
-    }
-    .loveTitle{
-      margin:0;
-      font-size:18px;
-      font-weight:900;
-      color:#cf2f73;
-      text-align:center;
-    }
-    .loveMeta{
-      margin:0;
-      font-size:14px;
-      color:#5a1f3b;
-      text-align:center;
-      line-height:1.6;
-      word-break:keep-all;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>뚜담펫 ToutdamPET | 반려동물 옷 사이즈 측정</title>
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+  <link href="/style.css" rel="stylesheet" />
 </head>
-
 <body>
-  <div class="wrap">
+  <main class="layout">
     <section class="hero">
-      <div class="brandline">
-        <span class="pill">TOUTDAMPET</span>
-        <span class="pill" style="letter-spacing:.02em;font-weight:800;color:#a03a65">뚜담펫 toutdampet</span>
-      </div>
-      <h1>우리 아이 연필 스케치 만들기</h1>
-      <p class="sub">
-        사진을 넣으면 브라우저에서 바로 “연필 스케치” 느낌으로 변환해줘요. (업로드된 이미지는 서버로 전송되지 않아요)
-      </p>
+      <p class="brand">ToutdamPET</p>
+      <h1>뚜담펫 반려동물 옷 사이즈 측정</h1>
+      <p class="lead">무게와 실측값을 입력하면 강아지/고양이 의류 기준 사이즈를 빠르게 추천합니다.</p>
     </section>
 
-    <div class="grid">
-      <!-- 왼쪽: 스케치 툴 -->
-      <section class="card">
-        <h2>스케치 변환</h2>
+    <section class="panel">
+      <h2>사이즈 측정 입력</h2>
+      <form id="sizeForm" class="size-form">
+        <label>
+          반려동물 종류
+          <select id="petType" required>
+            <option value="dog">강아지</option>
+            <option value="cat">고양이</option>
+          </select>
+        </label>
 
-        <label for="file">아이 사진 업로드</label>
-        <input id="file" type="file" accept="image/*" />
+        <label>
+          체중(kg)
+          <input id="weight" type="number" min="0.5" step="0.1" placeholder="예: 4.2" required />
+        </label>
 
-        <div class="row">
-          <div style="flex:1;min-width:220px">
-            <label for="strength">스케치 강도 <span id="strengthVal" style="color:var(--brand);font-weight:900">70</span></label>
-            <input id="strength" type="range" min="0" max="100" value="70" />
-            <div class="hint">강도를 올리면 더 “연필선” 느낌이 강해지고, 낮추면 부드러워져요.</div>
-          </div>
-          <div style="flex:1;min-width:220px">
-            <label for="contrast">대비 <span id="contrastVal" style="color:var(--brand);font-weight:900">18</span></label>
-            <input id="contrast" type="range" min="0" max="40" value="18" />
-            <div class="hint">대비를 올리면 선이 또렷해져요.</div>
-          </div>
-        </div>
+        <label>
+          등길이(cm)
+          <input id="backLength" type="number" min="10" step="0.5" placeholder="목 뒤부터 꼬리 시작점까지" required />
+        </label>
 
-        <div class="row">
-          <button id="make" class="btn btn-primary btn-wide">연필 스케치 만들기</button>
-          <button id="download" class="btn btn-ghost" disabled>결과 다운로드</button>
-        </div>
+        <label>
+          가슴둘레(cm)
+          <input id="chest" type="number" min="15" step="0.5" placeholder="앞다리 뒤 가장 두꺼운 둘레" required />
+        </label>
 
-        <div class="divider"></div>
+        <label>
+          목둘레(cm)
+          <input id="neck" type="number" min="10" step="0.5" placeholder="목 가장 두꺼운 둘레" required />
+        </label>
 
-        <div class="previewWrap">
-          <div class="preview">
-            <div class="tag">원본</div>
-            <img id="origImg" alt="업로드한 원본 이미지 미리보기" style="display:none" />
-            <div id="origEmpty" class="hint" style="padding:18px;text-align:center">
-              아직 사진이 없어요.<br/>우리 아이 사진을 업로드해 주세요.
-            </div>
-          </div>
+        <label>
+          핏 선호
+          <select id="fit">
+            <option value="regular">기본핏</option>
+            <option value="slim">슬림핏</option>
+            <option value="roomy">여유핏</option>
+          </select>
+        </label>
 
-          <div class="preview">
-            <div class="tag">스케치</div>
-            <canvas id="out" width="900" height="700" style="display:none"></canvas>
-            <div id="outEmpty" class="hint" style="padding:18px;text-align:center">
-              변환 버튼을 누르면 스케치가 여기 표시돼요.
-            </div>
-          </div>
-        </div>
-
-        <div class="footerNote">
-          <strong>TIP</strong> 배경이 복잡한 사진보다, 얼굴/몸이 잘 보이는 사진이 스케치가 더 예쁘게 나와요.
-        </div>
-      </section>
-
-      <!-- 오른쪽: 브랜드/상품 -->
-      <aside class="card">
-        <h2>뚜담펫 추천</h2>
-        <a id="smartstoreBtn" class="btn btn-primary" href="#" target="_blank" rel="noopener">
-          스마트스토어 바로가기
-        </a>
-        <div class="mini">버튼/상품은 아래 데이터만 바꾸면 바로 적용돼요.</div>
-
-        <div class="divider"></div>
-
-        <h2 style="margin-top:0">요즘 잘나가요 (TOP 5)</h2>
-        <div id="products" class="products"></div>
-
-        <div class="footerNote">
-          * 이 페이지는 홍보/체험용 툴입니다. 결과 이미지는 기기/브라우저에 따라 약간 다를 수 있어요.
-        </div>
-      </aside>
-    </div>
-
-    <section class="card fitCard">
-      <h2>맞춤 사이즈 카드 만들기</h2>
-      <p class="mini">사이즈를 먼저 계산한 뒤, 아이 이름과 사진을 넣어 하트 카드로 만들 수 있어요.</p>
-
-      <form id="fitForm">
-        <div class="fitGrid">
-          <div>
-            <label for="fitWeight">체중(kg)</label>
-            <input id="fitWeight" type="number" min="0" step="0.1" placeholder="예: 4.2" required />
-          </div>
-          <div>
-            <label for="fitChest">가슴둘레(cm)</label>
-            <input id="fitChest" type="number" min="0" step="0.1" placeholder="예: 38" required />
-          </div>
-          <div>
-            <label for="fitNeck">목둘레(cm)</label>
-            <input id="fitNeck" type="number" min="0" step="0.1" placeholder="예: 21" required />
-          </div>
-          <div>
-            <label for="fitBack">등길이(cm)</label>
-            <input id="fitBack" type="number" min="0" step="0.1" placeholder="예: 30" required />
-          </div>
-        </div>
-        <div class="row">
-          <button class="btn btn-primary" type="submit">맞춤 사이즈 계산</button>
-          <button id="openProfileBtn" class="btn btn-ghost" type="button" disabled>아이 이름/사진 넣기</button>
-        </div>
+        <button class="cta" type="submit">사이즈 추천 받기</button>
       </form>
+    </section>
 
-      <div id="fitResult" class="fitResult" hidden>
-        <p id="fitResultText" class="fitResultText"></p>
+    <section id="resultPanel" class="panel result-panel" aria-live="polite">
+      <h2>추천 결과</h2>
+      <p id="resultText" class="result-text">아직 측정 결과가 없습니다.</p>
+      <ul id="resultTips" class="tips"></ul>
+    </section>
+
+    <section id="profileCardPanel" class="panel" aria-live="polite">
+      <h2>맞춤 카드 만들기</h2>
+      <p class="result-text">추천 결과 확인 후 아이 이름/사진을 넣어 하트 카드로 저장할 수 있어요.</p>
+      <div class="card-actions">
+        <button id="openProfileFormBtn" class="toggle-image-btn" type="button" disabled>아이 이름/사진 넣기</button>
       </div>
 
-      <div id="profilePanel" class="profilePanel" hidden>
+      <div id="profileFormWrap" class="profile-form-wrap" hidden>
         <label for="petNameInput">아이 이름</label>
         <input id="petNameInput" type="text" placeholder="예: 뚜다미" />
 
         <label for="petPhotoInput">아이 사진</label>
         <input id="petPhotoInput" type="file" accept="image/*" />
 
-        <div class="row">
-          <button id="makeLoveCard" class="btn btn-primary" type="button">하트 카드 만들기</button>
-        </div>
+        <button id="makeProfileCardBtn" class="cta" type="button">하트 카드 만들기</button>
       </div>
 
-      <div id="loveCard" class="loveCard" hidden>
-        <div class="heartFrame">
-          <img id="lovePetPhoto" alt="하트 액자 속 아이 사진" />
+      <div id="petProfileCard" class="pet-profile-card" hidden>
+        <div class="heart-frame">
+          <img id="petProfileImage" alt="하트 액자 속 반려동물 사진" />
         </div>
-        <p id="loveTitle" class="loveTitle"></p>
-        <p id="loveMeta" class="loveMeta"></p>
+        <p id="petProfileTitle" class="pet-profile-title"></p>
+        <p id="petProfileMeta" class="pet-profile-meta"></p>
       </div>
     </section>
-  </div>
 
-  <script>
-    /***********************
-     * 1) 여기만 수정하면 됨
-     ***********************/
-    const SMARTSTORE_URL = "https://smartstore.naver.com/yourstore"; // TODO: 실제 스마트스토어 링크로 변경
+    <section class="panel chart-panel" aria-labelledby="sizeChartHeading">
+      <h2 id="sizeChartHeading">사이즈표 보기</h2>
+      <p id="sizeChartAverageNotice" class="chart-average-notice"></p>
+      <div class="table-scroll">
+        <table id="sizeChartTable" class="size-chart-table">
+          <caption>강아지 옷 평균 사이즈표</caption>
+        </table>
+      </div>
+      <button id="toggleChartImage" class="toggle-image-btn" type="button" aria-expanded="false" aria-controls="sizeChartImageWrap">
+        이미지로 보기
+      </button>
+      <div id="sizeChartImageWrap" class="chart-image-wrap" hidden>
+        <img id="sizeChartImage" src="" alt="강아지 옷 사이즈표(평균값)" loading="lazy" />
+      </div>
+      <ul id="sizeChartNotices" class="chart-notices"></ul>
+    </section>
 
-    const TOP_PRODUCTS = [
-      {
-        title: "베스트 상품 1",
-        desc: "한 줄 설명을 넣어주세요",
-        url: "https://smartstore.naver.com/yourstore/products/0000001",
-        img: "https://via.placeholder.com/200x200.png?text=Product+1"
-      },
-      {
-        title: "베스트 상품 2",
-        desc: "한 줄 설명을 넣어주세요",
-        url: "https://smartstore.naver.com/yourstore/products/0000002",
-        img: "https://via.placeholder.com/200x200.png?text=Product+2"
-      },
-      {
-        title: "베스트 상품 3",
-        desc: "한 줄 설명을 넣어주세요",
-        url: "https://smartstore.naver.com/yourstore/products/0000003",
-        img: "https://via.placeholder.com/200x200.png?text=Product+3"
-      },
-      {
-        title: "베스트 상품 4",
-        desc: "한 줄 설명을 넣어주세요",
-        url: "https://smartstore.naver.com/yourstore/products/0000004",
-        img: "https://via.placeholder.com/200x200.png?text=Product+4"
-      },
-      {
-        title: "베스트 상품 5",
-        desc: "한 줄 설명을 넣어주세요",
-        url: "https://smartstore.naver.com/yourstore/products/0000005",
-        img: "https://via.placeholder.com/200x200.png?text=Product+5"
-      }
-    ];
+    <section class="panel guide">
+      <h2>측정 가이드</h2>
+      <p>1) 줄자를 너무 조이지 말고 손가락 한 마디 여유를 두세요.</p>
+      <p>2) 털이 길거나 근육량이 높은 아이는 한 치수 크게 선택하세요.</p>
+      <p>3) 신축성 없는 원단은 가슴둘레 기준으로 선택하는 것이 안전합니다.</p>
+    </section>
+  </main>
 
-    /***********************
-     * 2) UI 렌더링
-     ***********************/
-    const $ = (s) => document.querySelector(s);
-
-    $("#smartstoreBtn").href = SMARTSTORE_URL;
-
-    const productsEl = $("#products");
-    productsEl.innerHTML = TOP_PRODUCTS.map(p => `
-      <a class="pItem" href="${p.url}" target="_blank" rel="noopener">
-        <div class="thumb"><img src="${p.img}" alt="${escapeHtml(p.title)}" loading="lazy"></div>
-        <div class="pMeta">
-          <p class="pTitle">${escapeHtml(p.title)}</p>
-          <p class="pDesc">${escapeHtml(p.desc)}</p>
-        </div>
-      </a>
-    `).join("");
-
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    /***********************
-     * 3) 스케치 변환(브라우저 Canvas)
-     *    - Pencil sketch 고전 방식:
-     *      grayscale -> invert -> blur -> color dodge
-     *    - strength/contrast로 결과 조절
-     ***********************/
-    const fileEl = $("#file");
-    const origImgEl = $("#origImg");
-    const origEmptyEl = $("#origEmpty");
-    const outCanvas = $("#out");
-    const outEmptyEl = $("#outEmpty");
-    const makeBtn = $("#make");
-    const dlBtn = $("#download");
-
-    const strengthEl = $("#strength");
-    const contrastEl = $("#contrast");
-    const strengthVal = $("#strengthVal");
-    const contrastVal = $("#contrastVal");
-
-    const fitForm = $("#fitForm");
-    const fitWeightEl = $("#fitWeight");
-    const fitChestEl = $("#fitChest");
-    const fitNeckEl = $("#fitNeck");
-    const fitBackEl = $("#fitBack");
-    const fitResult = $("#fitResult");
-    const fitResultText = $("#fitResultText");
-    const openProfileBtn = $("#openProfileBtn");
-    const profilePanel = $("#profilePanel");
-    const petNameInput = $("#petNameInput");
-    const petPhotoInput = $("#petPhotoInput");
-    const makeLoveCardBtn = $("#makeLoveCard");
-    const loveCard = $("#loveCard");
-    const lovePetPhoto = $("#lovePetPhoto");
-    const loveTitle = $("#loveTitle");
-    const loveMeta = $("#loveMeta");
-
-    strengthEl.addEventListener("input", () => strengthVal.textContent = strengthEl.value);
-    contrastEl.addEventListener("input", () => contrastVal.textContent = contrastEl.value);
-
-    let loadedImage = null;
-
-    fileEl.addEventListener("change", async (e) => {
-      const f = e.target.files?.[0];
-      if(!f) return;
-
-      const url = URL.createObjectURL(f);
-      const img = new Image();
-      img.onload = () => {
-        loadedImage = img;
-        origImgEl.src = url;
-        origImgEl.style.display = "block";
-        origEmptyEl.style.display = "none";
-        dlBtn.disabled = true;
-
-        outCanvas.style.display = "none";
-        outEmptyEl.style.display = "block";
-      };
-      img.onerror = () => {
-        loadedImage = null;
-        alert("이미지를 불러오지 못했어요. 다른 파일로 시도해 주세요.");
-      };
-      img.src = url;
-    });
-
-    makeBtn.addEventListener("click", async () => {
-      if(!loadedImage){
-        alert("먼저 사진을 업로드해 주세요!");
-        return;
-      }
-      makeBtn.disabled = true;
-      makeBtn.textContent = "변환 중…";
-
-      try{
-        const strength = Number(strengthEl.value); // 0~100
-        const contrast = Number(contrastEl.value); // 0~40
-        await renderSketch(loadedImage, outCanvas, { strength, contrast });
-
-        outCanvas.style.display = "block";
-        outEmptyEl.style.display = "none";
-        dlBtn.disabled = false;
-      } finally {
-        makeBtn.disabled = false;
-        makeBtn.textContent = "연필 스케치 만들기";
-      }
-    });
-
-    dlBtn.addEventListener("click", () => {
-      const a = document.createElement("a");
-      a.download = "toutdampet-pencil-sketch.png";
-      a.href = outCanvas.toDataURL("image/png");
-      a.click();
-    });
-
-    let latestFit = null;
-
-    function recommendSizeByWeight(weight){
-      if(weight > 0 && weight <= 2.5) return "S";
-      if(weight > 2.5 && weight <= 3.5) return "M";
-      if(weight > 3.5 && weight <= 5) return "L";
-      if(weight > 5 && weight <= 7.5) return "XL";
-      if(weight > 7.5 && weight <= 10) return "2XL";
-      return null;
-    }
-
-    function fmt(v){
-      const n = Number(v);
-      return Number.isInteger(n) ? String(n) : n.toFixed(1);
-    }
-
-    fitForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      const weight = Number(fitWeightEl.value);
-      const chest = Number(fitChestEl.value);
-      const neck = Number(fitNeckEl.value);
-      const back = Number(fitBackEl.value);
-
-      if([weight, chest, neck, back].some(v => !Number.isFinite(v) || v <= 0)){
-        alert("체중/가슴둘레/목둘레/등길이를 올바르게 입력해 주세요.");
-        return;
-      }
-
-      const size = recommendSizeByWeight(weight);
-      latestFit = { weight, chest, neck, back, size };
-
-      fitResult.hidden = false;
-      loveCard.hidden = true;
-      profilePanel.hidden = true;
-
-      if(!size){
-        fitResultText.textContent = `입력 기준 체중 ${fmt(weight)}kg는 표준 구간 밖이라 맞춤 사이즈가 애매할 수 있어요.`;
-        openProfileBtn.disabled = true;
-        return;
-      }
-
-      fitResultText.textContent = `추천 사이즈는 ${size} 입니다. 이름/사진 버튼을 눌러 하트 카드를 만들어 보세요.`;
-      openProfileBtn.disabled = false;
-    });
-
-    openProfileBtn.addEventListener("click", () => {
-      if(!latestFit || !latestFit.size) return;
-      profilePanel.hidden = false;
-      profilePanel.scrollIntoView({ behavior:"smooth", block:"nearest" });
-    });
-
-    makeLoveCardBtn.addEventListener("click", () => {
-      if(!latestFit || !latestFit.size){
-        alert("먼저 맞춤 사이즈를 계산해 주세요.");
-        return;
-      }
-
-      const photoFile = petPhotoInput.files?.[0];
-      if(!photoFile){
-        alert("아이 사진을 먼저 넣어주세요.");
-        return;
-      }
-
-      const name = (petNameInput.value || "").trim() || "아이이름";
-      const photoUrl = URL.createObjectURL(photoFile);
-
-      lovePetPhoto.src = photoUrl;
-      loveTitle.textContent = `사랑하는 뚜다미, ${name}`;
-      loveMeta.textContent = `${fmt(latestFit.weight)}kg/가슴둘레${fmt(latestFit.chest)}cm/목둘레${fmt(latestFit.neck)}cm/등길이${fmt(latestFit.back)}cm/${latestFit.size}사이즈 착용`;
-      loveCard.hidden = false;
-      loveCard.scrollIntoView({ behavior:"smooth", block:"nearest" });
-    });
-
-    async function renderSketch(img, canvas, opts){
-      const strength = Number(opts?.strength ?? 70);
-      const contrast = Number(opts?.contrast ?? 18);
-      const threshold = Math.round(20 + (contrast / 40) * 100);
-      const thickness = strength > 85 ? 3 : strength > 65 ? 2 : strength > 40 ? 1 : 0;
-
-      const maxW = 1400;
-      const scale = Math.min(1, maxW / img.naturalWidth);
-      const w = Math.max(1, Math.round(img.naturalWidth * scale));
-      const h = Math.max(1, Math.round(img.naturalHeight * scale));
-
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext("2d", { willReadFrequently:true });
-      ctx.clearRect(0,0,w,h);
-      ctx.drawImage(img, 0, 0, w, h);
-
-      const src = ctx.getImageData(0,0,w,h);
-      const gray = toGray1ch(src.data, w, h);
-      const smooth = boxBlur1ch(gray, w, h, 1);
-      let edge = sobelMag1ch(smooth, w, h);
-      edge = normalize1ch(edge);
-      let bw = thresholdToBW1ch(edge, threshold);
-
-      for(let i=0;i<thickness;i++){
-        bw = dilateBlack1ch(bw, w, h);
-      }
-
-      bw = addPaperNoiseBW1ch(bw, 2);
-
-      const out = new ImageData(w,h);
-      const d = out.data;
-      for(let i=0, j=0; i<d.length; i+=4, j++){
-        const v = bw[j];
-        d[i]=d[i+1]=d[i+2]=v;
-        d[i+3]=255;
-      }
-      ctx.putImageData(out, 0, 0);
-    }
-
-    function toGray1ch(rgba, w, h){
-      const out = new Uint8ClampedArray(w*h);
-      for(let i=0, j=0; i<rgba.length; i+=4, j++){
-        const r=rgba[i], g=rgba[i+1], b=rgba[i+2];
-        out[j] = (0.299*r + 0.587*g + 0.114*b) | 0;
-      }
-      return out;
-    }
-
-    function boxBlur1ch(src, w, h, radius){
-      const tmp = new Uint16Array(w*h);
-      const out = new Uint8ClampedArray(w*h);
-      const win = radius*2+1;
-
-      for(let y=0;y<h;y++){
-        let sum=0;
-        const row=y*w;
-        for(let x=-radius;x<=radius;x++){
-          const xx = clamp(x,0,w-1);
-          sum += src[row+xx];
-        }
-        for(let x=0;x<w;x++){
-          tmp[row+x]=sum;
-          const xOut=x-radius, xIn=x+radius+1;
-          if(xOut>=0) sum -= src[row+xOut];
-          if(xIn<w) sum += src[row+xIn];
-          else sum += src[row+w-1];
-        }
-      }
-
-      for(let x=0;x<w;x++){
-        let sum=0;
-        for(let y=-radius;y<=radius;y++){
-          const yy=clamp(y,0,h-1);
-          sum += tmp[yy*w+x];
-        }
-        for(let y=0;y<h;y++){
-          out[y*w+x] = (sum / (win*win)) | 0;
-          const yOut=y-radius, yIn=y+radius+1;
-          if(yOut>=0) sum -= tmp[yOut*w+x];
-          if(yIn<h) sum += tmp[yIn*w+x];
-          else sum += tmp[(h-1)*w+x];
-        }
-      }
-      return out;
-    }
-
-    function sobelMag1ch(src, w, h){
-      const out = new Uint16Array(w*h);
-      for(let y=1;y<h-1;y++){
-        for(let x=1;x<w-1;x++){
-          const i = y*w+x;
-          const a = src[i-w-1], b=src[i-w], c=src[i-w+1];
-          const d = src[i-1],           f=src[i+1];
-          const g = src[i+w-1], h1=src[i+w], k=src[i+w+1];
-
-          const gx = (-a + c) + (-2*d + 2*f) + (-g + k);
-          const gy = (-a -2*b - c) + (g + 2*h1 + k);
-          out[i] = (Math.abs(gx) + Math.abs(gy)) | 0;
-        }
-      }
-      return out;
-    }
-
-    function normalize1ch(src16){
-      let max = 0;
-      for(let i=0;i<src16.length;i++) if(src16[i] > max) max = src16[i];
-      const out = new Uint8ClampedArray(src16.length);
-      if(max === 0) return out;
-      const s = 255 / max;
-      for(let i=0;i<src16.length;i++){
-        out[i] = clamp((src16[i] * s) | 0, 0, 255);
-      }
-      return out;
-    }
-
-    function thresholdToBW1ch(edge, threshold){
-      const out = new Uint8ClampedArray(edge.length);
-      for(let i=0;i<edge.length;i++){
-        out[i] = edge[i] >= threshold ? 0 : 255;
-      }
-      return out;
-    }
-
-    function dilateBlack1ch(bw, w, h){
-      const out = new Uint8ClampedArray(bw);
-      for(let y=1;y<h-1;y++){
-        for(let x=1;x<w-1;x++){
-          const i=y*w+x;
-          if(bw[i]===0){
-            out[i-1]=0; out[i+1]=0; out[i-w]=0; out[i+w]=0;
-            out[i-w-1]=0; out[i-w+1]=0; out[i+w-1]=0; out[i+w+1]=0;
-          }
-        }
-      }
-      return out;
-    }
-
-    function addPaperNoiseBW1ch(bw, amount){
-      if(!amount) return bw;
-      const out = new Uint8ClampedArray(bw);
-      for(let i=0;i<out.length;i++){
-        if(out[i] === 255){
-          const n = (Math.random()*2-1)*amount;
-          out[i] = clamp((255 + n) | 0, 235, 255);
-        }
-      }
-      return out;
-    }
-
-    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
-  </script>
+  <script defer type="text/javascript" src="/sizeChartData.js"></script>
+  <script defer type="text/javascript" src="/main.js"></script>
 </body>
 </html>
