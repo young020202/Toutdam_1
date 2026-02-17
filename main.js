@@ -168,7 +168,18 @@ function drawCoverImage(ctx, img, x, y, w, h) {
   ctx.drawImage(img, dx, dy, dw, dh);
 }
 
-function downloadProfileCardImage() {
+function dataUrlToBlob(dataUrl) {
+  const [meta, base64] = dataUrl.split(",");
+  const mime = (meta.match(/data:(.*);base64/) || [])[1] || "image/png";
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new Blob([bytes], { type: mime });
+}
+
+async function downloadProfileCardImage() {
   if (!latestRecommendation || !petProfileImage.src) {
     alert("먼저 카드를 만들어주세요.");
     return;
@@ -233,29 +244,46 @@ function downloadProfileCardImage() {
   ctx.fillText(infoLine, canvas.width / 2, 910);
   ctx.fillText(sizeLine, canvas.width / 2, 980);
 
-  canvas.toBlob((blob) => {
-    if (!blob) {
-      alert("카드 저장에 실패했어요. 다시 시도해 주세요.");
-      return;
-    }
-    const url = URL.createObjectURL(blob);
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const fileName = `toutdam-profile-card-${Date.now()}.png`;
+  const dataUrl = canvas.toDataURL("image/png");
+  const blob = dataUrlToBlob(dataUrl);
+  const file = new File([blob], fileName, { type: "image/png" });
 
-    if (isIOS) {
-      window.open(url, "_blank");
-      setTimeout(() => URL.revokeObjectURL(url), 60000);
-      alert("새 탭에서 이미지를 길게 눌러 저장해 주세요.");
-      return;
-    }
+  const canShareFile =
+    typeof navigator !== "undefined" &&
+    typeof navigator.share === "function" &&
+    typeof navigator.canShare === "function" &&
+    navigator.canShare({ files: [file] });
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `toutdam-profile-card-${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }, "image/png");
+  if (canShareFile) {
+    try {
+      await navigator.share({
+        files: [file],
+        title: "뚜담펫 맞춤 카드",
+        text: "맞춤 사이즈 카드 이미지",
+      });
+      return;
+    } catch (error) {
+      if (error && error.name === "AbortError") return;
+    }
+  }
+
+  const url = URL.createObjectURL(blob);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (isIOS) {
+    window.open(url, "_blank");
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    return;
+  }
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 sizeForm.addEventListener("submit", (event) => {
