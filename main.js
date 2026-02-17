@@ -235,15 +235,23 @@ async function downloadProfileCardImage() {
   ctx.fillStyle = "#d43478";
   ctx.font = "700 56px Pretendard, sans-serif";
   ctx.textAlign = "center";
-  const titleText = (petProfileTitle.textContent || "사랑하는 뚜다미, 아이이름").replace("사랑하는 뚜다미,", "♥ 사랑하는 뚜다미,");
-  ctx.fillText(`${titleText} ♥`, canvas.width / 2, 840);
+  const petNameForTitle = (petNameInput.value || "").trim() || "아이이름";
+  ctx.fillText(`♥ 사랑하는 뚜다미, ${petNameForTitle} ♥`, canvas.width / 2, 840);
 
   ctx.fillStyle = "#5b3045";
   ctx.font = "500 40px Pretendard, sans-serif";
-  const infoLine = `${formatMeasure(latestRecommendation.weight)}kg/가슴둘레${formatMeasure(latestRecommendation.chest)}cm/목둘레${formatMeasure(latestRecommendation.neck)}cm/등길이${formatMeasure(latestRecommendation.backLength)}cm`;
-  const sizeLine = `${latestRecommendation.size}사이즈 착용`;
-  ctx.fillText(infoLine, canvas.width / 2, 930);
-  ctx.fillText(sizeLine, canvas.width / 2, 1000);
+  const lines = [
+    `${formatMeasure(latestRecommendation.weight)}kg`,
+    `가슴둘레 ${formatMeasure(latestRecommendation.chest)}cm`,
+    `목둘레 ${formatMeasure(latestRecommendation.neck)}cm`,
+    `등길이 ${formatMeasure(latestRecommendation.backLength)}cm`,
+    `${latestRecommendation.size}사이즈 착용`,
+  ];
+  let textY = 920;
+  lines.forEach((line) => {
+    ctx.fillText(line, canvas.width / 2, textY);
+    textY += 62;
+  });
 
   const fileName = `toutdam-profile-card-${Date.now()}.png`;
   const dataUrl = canvas.toDataURL("image/png");
