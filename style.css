@@ -1,12 +1,13 @@
 :root {
-  --bg: #fffaf1;
-  --bg2: #ffe5bd;
-  --panel: rgba(255, 255, 255, 0.86);
-  --text: #32220f;
-  --muted: #7a6244;
-  --accent: #f47f24;
-  --accent-dark: #d9630b;
-  --line: #efcfaa;
+  --bg: #fff9fb;
+  --bg2: #ffe7f0;
+  --panel: rgba(255, 255, 255, 0.9);
+  --text: #402232;
+  --muted: #8b6074;
+  --accent: #e54f8f;
+  --accent-dark: #cb2f73;
+  --line: #f4d5e3;
+  --shadow: 0 18px 40px rgba(203, 47, 115, 0.18);
 }
 
 * {
@@ -15,8 +16,11 @@
 
 body {
   margin: 0;
-  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-  background: linear-gradient(160deg, var(--bg), var(--bg2));
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  background:
+    radial-gradient(circle at 12% 12%, #ffddea 0, transparent 35%),
+    radial-gradient(circle at 88% 18%, #ffcee4 0, transparent 36%),
+    linear-gradient(155deg, var(--bg), var(--bg2));
   color: var(--text);
   min-height: 100vh;
 }
@@ -25,38 +29,41 @@ body {
   width: min(960px, calc(100% - 32px));
   margin: 28px auto 36px;
   display: grid;
-  gap: 16px;
+  gap: 18px;
 }
 
 .hero {
-  padding: 28px;
+  padding: 30px;
   border: 1px solid var(--line);
-  border-radius: 24px;
-  background: radial-gradient(circle at 85% 10%, #ffd18c 0%, transparent 45%),
-    radial-gradient(circle at 10% 90%, #ffdcb6 0%, transparent 35%), var(--panel);
-  backdrop-filter: blur(4px);
+  border-radius: 26px;
+  background: radial-gradient(circle at 86% 12%, #ffd6e9 0%, transparent 46%),
+    radial-gradient(circle at 12% 90%, #ffe7f2 0%, transparent 38%), var(--panel);
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow);
 }
 
 .brand {
   margin: 0 0 8px;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   color: var(--accent-dark);
+  text-transform: uppercase;
 }
 
 .hero h1 {
   margin: 0;
-  font-family: "Montserrat", "Noto Sans KR", sans-serif;
   font-weight: 700;
-  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  font-size: clamp(1.7rem, 4vw, 2.55rem);
   line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 .lead {
   margin: 12px 0 0;
   color: var(--muted);
-  font-size: 1rem;
+  font-size: 1.01rem;
+  line-height: 1.6;
 }
 
 .panel {
@@ -64,11 +71,14 @@ body {
   border: 1px solid var(--line);
   border-radius: 20px;
   background: var(--panel);
+  box-shadow: var(--shadow);
 }
 
 .panel h2 {
   margin: 0 0 16px;
   font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  color: #5f3448;
 }
 
 .size-form {
@@ -81,7 +91,7 @@ body {
   gap: 8px;
   color: var(--muted);
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 input,
@@ -93,26 +103,29 @@ select,
   padding: 12px 13px;
   font-size: 1rem;
   color: var(--text);
-  background: #fffefb;
+  background: #fffdfd;
 }
 
 input:focus,
 select:focus {
   border-color: var(--accent);
-  outline: 2px solid rgba(244, 127, 36, 0.25);
+  outline: 2px solid rgba(229, 79, 143, 0.24);
 }
 
 .cta {
   margin-top: 6px;
-  background: var(--accent);
+  background: linear-gradient(120deg, var(--accent), var(--accent-dark));
   color: #ffffff;
   border-color: transparent;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 12px 24px rgba(203, 47, 115, 0.28);
 }
 
 .cta:hover {
-  background: var(--accent-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(203, 47, 115, 0.35);
 }
 
 .result-panel {
@@ -126,7 +139,7 @@ select:focus {
   inset: auto -60px -60px auto;
   width: 170px;
   height: 170px;
-  background: radial-gradient(circle, rgba(244, 127, 36, 0.18), transparent 60%);
+  background: radial-gradient(circle, rgba(229, 79, 143, 0.2), transparent 60%);
 }
 
 .result-text {
@@ -157,5 +170,13 @@ select:focus {
   .hero,
   .panel {
     padding: 18px;
+  }
+
+  .hero h1 {
+    font-size: 1.55rem;
+  }
+
+  .lead {
+    font-size: 0.95rem;
   }
 }
