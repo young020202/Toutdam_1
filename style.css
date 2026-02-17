@@ -188,9 +188,9 @@ select:focus {
 }
 
 .heart-frame {
-  width: min(420px, 92vw);
+  width: min(500px, 94vw);
   aspect-ratio: 212 / 194;
-  padding: 14px;
+  padding: 16px;
   background: linear-gradient(145deg, #ff9ec4, #ff74ab);
   clip-path: polygon(50% 95%, 7% 60%, 7% 34%, 22% 17%, 36% 17%, 50% 31%, 64% 17%, 78% 17%, 93% 34%, 93% 60%);
   display: flex;
@@ -221,6 +221,7 @@ select:focus {
   font-size: 0.95rem;
   line-height: 1.55;
   text-align: center;
+  white-space: pre-line;
 }
 
 .chart-average-notice {

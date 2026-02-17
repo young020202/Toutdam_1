@@ -142,6 +142,21 @@ function drawHeartPath(ctx, x, y, w, h) {
   ctx.closePath();
 }
 
+function drawRoundedRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + w - radius, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+  ctx.lineTo(x + w, y + h - radius);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+  ctx.lineTo(x + radius, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
 function drawCoverImage(ctx, img, x, y, w, h) {
   const iw = img.naturalWidth || img.width || 1;
   const ih = img.naturalHeight || img.height || 1;
@@ -153,23 +168,13 @@ function drawCoverImage(ctx, img, x, y, w, h) {
   ctx.drawImage(img, dx, dy, dw, dh);
 }
 
-function waitForImage(img) {
-  if (img.complete && img.naturalWidth > 0) return Promise.resolve();
-  return new Promise((resolve, reject) => {
-    img.onload = () => resolve();
-    img.onerror = () => reject(new Error("image-load-failed"));
-  });
-}
-
-async function downloadProfileCardImage() {
+function downloadProfileCardImage() {
   if (!latestRecommendation || !petProfileImage.src) {
     alert("먼저 카드를 만들어주세요.");
     return;
   }
 
-  try {
-    await waitForImage(petProfileImage);
-  } catch {
+  if (!(petProfileImage.complete && petProfileImage.naturalWidth > 0)) {
     alert("사진을 불러오지 못했어요. 다시 시도해 주세요.");
     return;
   }
@@ -188,15 +193,14 @@ async function downloadProfileCardImage() {
   ctx.fillStyle = "#ffffff";
   ctx.strokeStyle = "#f4d5e3";
   ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.roundRect(60, 60, 960, 1280, 40);
+  drawRoundedRect(ctx, 60, 60, 960, 1280, 40);
   ctx.fill();
   ctx.stroke();
 
-  const frameX = 240;
-  const frameY = 150;
-  const frameW = 600;
-  const frameH = 550;
+  const frameX = 190;
+  const frameY = 130;
+  const frameW = 700;
+  const frameH = 640;
 
   const frameGrad = ctx.createLinearGradient(frameX, frameY, frameX + frameW, frameY + frameH);
   frameGrad.addColorStop(0, "#ff9ec4");
@@ -224,20 +228,34 @@ async function downloadProfileCardImage() {
 
   ctx.fillStyle = "#5b3045";
   ctx.font = "500 40px Pretendard, sans-serif";
-  const lines = (petProfileMeta.textContent || "").split("/");
-  let textY = 910;
-  lines.forEach((line) => {
-    ctx.fillText(line, canvas.width / 2, textY);
-    textY += 66;
-  });
+  const infoLine = `${formatMeasure(latestRecommendation.weight)}kg/가슴둘레${formatMeasure(latestRecommendation.chest)}cm/목둘레${formatMeasure(latestRecommendation.neck)}cm/등길이${formatMeasure(latestRecommendation.backLength)}cm`;
+  const sizeLine = `${latestRecommendation.size}사이즈 착용`;
+  ctx.fillText(infoLine, canvas.width / 2, 910);
+  ctx.fillText(sizeLine, canvas.width / 2, 980);
 
-  const dataUrl = canvas.toDataURL("image/png");
-  const a = document.createElement("a");
-  a.href = dataUrl;
-  a.download = `toutdam-profile-card-${Date.now()}.png`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  canvas.toBlob((blob) => {
+    if (!blob) {
+      alert("카드 저장에 실패했어요. 다시 시도해 주세요.");
+      return;
+    }
+    const url = URL.createObjectURL(blob);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (isIOS) {
+      window.open(url, "_blank");
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      alert("새 탭에서 이미지를 길게 눌러 저장해 주세요.");
+      return;
+    }
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `toutdam-profile-card-${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }, "image/png");
 }
 
 sizeForm.addEventListener("submit", (event) => {
@@ -302,7 +320,7 @@ makeProfileCardBtn.addEventListener("click", () => {
     `${formatMeasure(latestRecommendation.weight)}kg/` +
     `가슴둘레${formatMeasure(latestRecommendation.chest)}cm/` +
     `목둘레${formatMeasure(latestRecommendation.neck)}cm/` +
-    `등길이${formatMeasure(latestRecommendation.backLength)}cm/` +
+    `등길이${formatMeasure(latestRecommendation.backLength)}cm\n` +
     `${latestRecommendation.size}사이즈 착용`;
   petProfileCard.hidden = false;
 });
