@@ -1,1 +1,80 @@
-<h1>Hello Toutdam</h1>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>뚜담펫 ToutdamPET | 반려동물 옷 사이즈 측정</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="/style.css" rel="stylesheet" />
+</head>
+<body>
+  <main class="layout">
+    <section class="hero">
+      <p class="brand">ToutdamPET</p>
+      <h1>뚜담펫 반려동물 옷 사이즈 측정</h1>
+      <p class="lead">무게와 실측값을 입력하면 강아지/고양이 의류 기준 사이즈를 빠르게 추천합니다.</p>
+    </section>
+
+    <section class="panel">
+      <h2>사이즈 측정 입력</h2>
+      <form id="sizeForm" class="size-form">
+        <label>
+          반려동물 종류
+          <select id="petType" required>
+            <option value="dog">강아지</option>
+            <option value="cat">고양이</option>
+          </select>
+        </label>
+
+        <label>
+          체중(kg)
+          <input id="weight" type="number" min="0.5" step="0.1" placeholder="예: 4.2" required />
+        </label>
+
+        <label>
+          등길이(cm)
+          <input id="backLength" type="number" min="10" step="0.5" placeholder="목 뒤부터 꼬리 시작점까지" required />
+        </label>
+
+        <label>
+          가슴둘레(cm)
+          <input id="chest" type="number" min="15" step="0.5" placeholder="앞다리 뒤 가장 두꺼운 둘레" required />
+        </label>
+
+        <label>
+          목둘레(cm)
+          <input id="neck" type="number" min="10" step="0.5" placeholder="목 가장 두꺼운 둘레" required />
+        </label>
+
+        <label>
+          핏 선호
+          <select id="fit">
+            <option value="regular">기본핏</option>
+            <option value="slim">슬림핏</option>
+            <option value="roomy">여유핏</option>
+          </select>
+        </label>
+
+        <button class="cta" type="submit">사이즈 추천 받기</button>
+      </form>
+    </section>
+
+    <section id="resultPanel" class="panel result-panel" aria-live="polite">
+      <h2>추천 결과</h2>
+      <p id="resultText" class="result-text">아직 측정 결과가 없습니다.</p>
+      <ul id="resultTips" class="tips"></ul>
+    </section>
+
+    <section class="panel guide">
+      <h2>측정 가이드</h2>
+      <p>1) 줄자를 너무 조이지 말고 손가락 한 마디 여유를 두세요.</p>
+      <p>2) 털이 길거나 근육량이 높은 아이는 한 치수 크게 선택하세요.</p>
+      <p>3) 신축성 없는 원단은 가슴둘레 기준으로 선택하는 것이 안전합니다.</p>
+    </section>
+  </main>
+
+  <script defer type="text/javascript" src="/main.js"></script>
+</body>
+</html>
