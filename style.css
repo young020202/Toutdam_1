@@ -161,6 +161,86 @@ select:focus {
   color: var(--muted);
 }
 
+.chart-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.size-chart-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  background: #fffdfd;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.size-chart-table caption {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.size-chart-table th,
+.size-chart-table td {
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.size-chart-table th {
+  background: #fff1f7;
+  color: #5f3448;
+  font-weight: 700;
+}
+
+.size-chart-table tbody th {
+  text-align: left;
+}
+
+.toggle-image-btn {
+  width: fit-content;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #fff8fc;
+  color: #6b3f53;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chart-image-wrap {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px;
+  background: #fffdfd;
+}
+
+.chart-image-wrap img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.chart-notices {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+}
+
 @media (max-width: 640px) {
   .layout {
     width: calc(100% - 20px);
@@ -178,5 +258,9 @@ select:focus {
 
   .lead {
     font-size: 0.95rem;
+  }
+
+  .size-chart-table {
+    min-width: 500px;
   }
 }

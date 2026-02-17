@@ -8,79 +8,99 @@ const fitInput = document.getElementById("fit");
 const resultText = document.getElementById("resultText");
 const resultTips = document.getElementById("resultTips");
 
-const sizeChart = {
-  dog: [
-    { size: "XS", weight: 2.5, back: 22, chest: 30, neck: 20 },
-    { size: "S", weight: 4, back: 27, chest: 36, neck: 24 },
-    { size: "M", weight: 7, back: 32, chest: 43, neck: 29 },
-    { size: "L", weight: 11, back: 38, chest: 50, neck: 34 },
-    { size: "XL", weight: 16, back: 45, chest: 58, neck: 39 },
-    { size: "2XL", weight: 24, back: 53, chest: 68, neck: 45 },
-  ],
-  cat: [
-    { size: "XS", weight: 2, back: 20, chest: 28, neck: 18 },
-    { size: "S", weight: 3.5, back: 24, chest: 33, neck: 21 },
-    { size: "M", weight: 5, back: 28, chest: 38, neck: 24 },
-    { size: "L", weight: 6.5, back: 32, chest: 43, neck: 27 },
-    { size: "XL", weight: 8, back: 36, chest: 48, neck: 30 },
-  ],
-};
+const sizeChartTable = document.getElementById("sizeChartTable");
+const sizeChartNotices = document.getElementById("sizeChartNotices");
+const sizeChartImage = document.getElementById("sizeChartImage");
+const sizeChartImageWrap = document.getElementById("sizeChartImageWrap");
+const toggleChartImageBtn = document.getElementById("toggleChartImage");
 
-function getIndexForValue(chart, key, value) {
-  return chart.findIndex((row) => value <= row[key]);
+const chartData = window.SIZE_CHART_DATA;
+
+function buildSizeChartTable() {
+  const head = document.createElement("thead");
+  const headRow = document.createElement("tr");
+
+  const headLabel = document.createElement("th");
+  headLabel.scope = "col";
+  headLabel.textContent = "측정 항목";
+  headRow.appendChild(headLabel);
+
+  chartData.columns.forEach((column) => {
+    const th = document.createElement("th");
+    th.scope = "col";
+    th.textContent = column;
+    headRow.appendChild(th);
+  });
+  head.appendChild(headRow);
+
+  const body = document.createElement("tbody");
+  chartData.rows.forEach((row) => {
+    const tr = document.createElement("tr");
+    const rowHeader = document.createElement("th");
+    rowHeader.scope = "row";
+    rowHeader.textContent = row.label;
+    tr.appendChild(rowHeader);
+
+    chartData.columns.forEach((column) => {
+      const td = document.createElement("td");
+      td.textContent = row.values[column] || "-";
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+
+  sizeChartTable.appendChild(head);
+  sizeChartTable.appendChild(body);
 }
 
-function normalizeMeasureIndex(chart, index) {
-  if (index < 0) {
-    return chart.length - 1;
-  }
-  return index;
+function buildNotices() {
+  chartData.notices.forEach((notice) => {
+    const li = document.createElement("li");
+    li.textContent = notice;
+    sizeChartNotices.appendChild(li);
+  });
 }
 
-function clampSizeIndex(chart, index) {
-  if (index < 0) {
-    return 0;
-  }
-  if (index > chart.length - 1) {
-    return chart.length - 1;
-  }
-  return index;
+function setupChartImage() {
+  const imageSrc = chartData.localImageUrl || chartData.imageUrl;
+  sizeChartImage.src = imageSrc;
 }
 
-function getFitOffset(fit) {
-  if (fit === "slim") {
-    return -1;
-  }
-  if (fit === "roomy") {
-    return 1;
-  }
-  return 0;
+function toggleChartImage() {
+  const expanded = toggleChartImageBtn.getAttribute("aria-expanded") === "true";
+  const next = !expanded;
+  toggleChartImageBtn.setAttribute("aria-expanded", String(next));
+  toggleChartImageBtn.textContent = next ? "이미지 숨기기" : "이미지로 보기";
+  sizeChartImageWrap.hidden = !next;
 }
 
-function recommendSize({ petType, weight, backLength, chest, neck, fit }) {
-  const chart = sizeChart[petType];
-  const indices = [
-    getIndexForValue(chart, "weight", weight),
-    getIndexForValue(chart, "back", backLength),
-    getIndexForValue(chart, "chest", chest),
-    getIndexForValue(chart, "neck", neck),
-  ].map((idx) => normalizeMeasureIndex(chart, idx));
-
-  const baseIndex = Math.max(...indices);
-  const adjustedIndex = clampSizeIndex(chart, baseIndex + getFitOffset(fit));
-  return chart[adjustedIndex];
+function getWeightRecommendation(weight) {
+  for (const rule of chartData.weightRules) {
+    if (weight > rule.minExclusive && weight <= rule.maxInclusive) {
+      return { size: rule.size, inRange: true };
+    }
+  }
+  return { size: null, inRange: false };
 }
 
-function renderTips(measurements, size) {
-  const tips = [
-    `추천 사이즈 ${size.size} 기준 가슴둘레 허용값은 최대 ${size.chest}cm입니다.`,
-    measurements.chest > size.chest - 2
-      ? "가슴둘레가 상한에 가까워요. 신축성 없는 옷은 한 치수 크게 고려하세요."
-      : "현재 측정값은 표준 핏 기준으로 안정적인 범위입니다.",
-    measurements.backLength > size.back
-      ? "등길이가 길어 배 부분이 짧을 수 있습니다. 롱핏 제품을 우선 확인하세요."
-      : "등길이도 현재 사이즈 범위 안에 들어옵니다.",
-  ];
+function renderTips(input, recommendation) {
+  const tips = [];
+
+  if (!recommendation.inRange) {
+    tips.push("입력한 몸무게가 기준 범위를 벗어나 전문 상담을 권장합니다.");
+    tips.push("가슴둘레와 등길이를 우선 확인하고 문의 채널을 통해 맞춤 상담을 받아보세요.");
+  } else {
+    tips.push(`추천 사이즈는 ${recommendation.size} 입니다. (몸무게 기준)`);
+    tips.push(
+      input.fit === "roomy"
+        ? "여유핏 선택 시 한 단계 크게 느껴질 수 있어 실측값을 함께 확인하세요."
+        : "기본/슬림핏은 가슴둘레 실측을 함께 확인하면 실패 확률이 줄어듭니다."
+    );
+  }
+
+  if (input.chest >= 44 || input.backLength >= 31 || input.neck >= 30) {
+    tips.push("실측값이 XL 기준에 근접합니다. 활동량이 많다면 신축성 있는 소재를 권장합니다.");
+  }
 
   resultTips.innerHTML = "";
   tips.forEach((tip) => {
@@ -102,9 +122,20 @@ sizeForm.addEventListener("submit", (event) => {
     fit: fitInput.value,
   };
 
-  const recommended = recommendSize(input);
+  const recommendation = getWeightRecommendation(input.weight);
   const petLabel = input.petType === "dog" ? "강아지" : "고양이";
 
-  resultText.textContent = `${petLabel} 측정 기준 추천 사이즈는 ${recommended.size} 입니다. (기준: 체중 ${input.weight}kg / 등 ${input.backLength}cm / 가슴 ${input.chest}cm / 목 ${input.neck}cm)`;
-  renderTips(input, recommended);
+  if (!recommendation.inRange) {
+    resultText.textContent = `${petLabel} 측정 기준 현재 입력 몸무게(${input.weight}kg)는 표준 추천 범위(0~7.5kg) 밖입니다. 문의 권장 사이즈로 안내합니다.`;
+  } else {
+    resultText.textContent = `${petLabel} 측정 기준 추천 사이즈는 ${recommendation.size} 입니다. (기준: 체중 ${input.weight}kg / 등 ${input.backLength}cm / 가슴 ${input.chest}cm / 목 ${input.neck}cm)`;
+  }
+
+  renderTips(input, recommendation);
 });
+
+toggleChartImageBtn.addEventListener("click", toggleChartImage);
+
+buildSizeChartTable();
+buildNotices();
+setupChartImage();
