@@ -10,6 +10,7 @@ const resultTips = document.getElementById("resultTips");
 
 const sizeChartTable = document.getElementById("sizeChartTable");
 const sizeChartNotices = document.getElementById("sizeChartNotices");
+const sizeChartAverageNotice = document.getElementById("sizeChartAverageNotice");
 const sizeChartImage = document.getElementById("sizeChartImage");
 const sizeChartImageWrap = document.getElementById("sizeChartImageWrap");
 const toggleChartImageBtn = document.getElementById("toggleChartImage");
@@ -54,6 +55,8 @@ function buildSizeChartTable() {
 }
 
 function buildNotices() {
+  sizeChartAverageNotice.textContent = chartData.averageNotice;
+
   chartData.notices.forEach((notice) => {
     const li = document.createElement("li");
     li.textContent = notice;
@@ -76,7 +79,10 @@ function toggleChartImage() {
 
 function getWeightRecommendation(weight) {
   for (const rule of chartData.weightRules) {
-    if (weight > rule.minExclusive && weight <= rule.maxInclusive) {
+    if (
+      weight >= rule.minInclusive &&
+      (rule.maxExclusive === undefined ? weight <= rule.maxInclusive : weight < rule.maxExclusive)
+    ) {
       return { size: rule.size, inRange: true };
     }
   }
@@ -87,8 +93,8 @@ function renderTips(input, recommendation) {
   const tips = [];
 
   if (!recommendation.inRange) {
-    tips.push("입력한 몸무게가 기준 범위를 벗어나 전문 상담을 권장합니다.");
-    tips.push("가슴둘레와 등길이를 우선 확인하고 문의 채널을 통해 맞춤 상담을 받아보세요.");
+    tips.push("입력한 몸무게는 평균값 기준 구간 밖이라 추천이 애매할 수 있습니다.");
+    tips.push("가슴둘레와 등길이를 함께 확인한 뒤 고객센터 문의를 권장합니다.");
   } else {
     tips.push(`추천 사이즈는 ${recommendation.size} 입니다. (몸무게 기준)`);
     tips.push(
@@ -126,7 +132,7 @@ sizeForm.addEventListener("submit", (event) => {
   const petLabel = input.petType === "dog" ? "강아지" : "고양이";
 
   if (!recommendation.inRange) {
-    resultText.textContent = `${petLabel} 측정 기준 현재 입력 몸무게(${input.weight}kg)는 표준 추천 범위(0~7.5kg) 밖입니다. 문의 권장 사이즈로 안내합니다.`;
+    resultText.textContent = `${petLabel} 측정 기준 현재 입력 몸무게(${input.weight}kg)는 평균값 추천 범위(0~10kg) 밖입니다. 평균값 기준으로는 애매할 수 있어 문의를 권장합니다.`;
   } else {
     resultText.textContent = `${petLabel} 측정 기준 추천 사이즈는 ${recommendation.size} 입니다. (기준: 체중 ${input.weight}kg / 등 ${input.backLength}cm / 가슴 ${input.chest}cm / 목 ${input.neck}cm)`;
   }

@@ -166,6 +166,17 @@ select:focus {
   gap: 14px;
 }
 
+.chart-average-notice {
+  margin: 0;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: #ffeefa;
+  border: 1px solid #f4c9de;
+  color: #7e3658;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 .table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

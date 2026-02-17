@@ -67,16 +67,17 @@
 
     <section class="panel chart-panel" aria-labelledby="sizeChartHeading">
       <h2 id="sizeChartHeading">사이즈표 보기</h2>
+      <p id="sizeChartAverageNotice" class="chart-average-notice"></p>
       <div class="table-scroll">
         <table id="sizeChartTable" class="size-chart-table">
-          <caption>강아지 옷 사이즈표 기준값</caption>
+          <caption>강아지 옷 평균 사이즈표</caption>
         </table>
       </div>
       <button id="toggleChartImage" class="toggle-image-btn" type="button" aria-expanded="false" aria-controls="sizeChartImageWrap">
         이미지로 보기
       </button>
       <div id="sizeChartImageWrap" class="chart-image-wrap" hidden>
-        <img id="sizeChartImage" src="" alt="강아지 옷 사이즈표" loading="lazy" />
+        <img id="sizeChartImage" src="" alt="강아지 옷 사이즈표(평균값)" loading="lazy" />
       </div>
       <ul id="sizeChartNotices" class="chart-notices"></ul>
     </section>
