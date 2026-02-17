@@ -23,6 +23,7 @@ const petProfileCard = document.getElementById("petProfileCard");
 const petProfileImage = document.getElementById("petProfileImage");
 const petProfileTitle = document.getElementById("petProfileTitle");
 const petProfileMeta = document.getElementById("petProfileMeta");
+const downloadProfileCardBtn = document.getElementById("downloadProfileCardBtn");
 
 const chartData = window.SIZE_CHART_DATA;
 let latestRecommendation = null;
@@ -131,6 +132,114 @@ function formatMeasure(value) {
   return Number.isInteger(n) ? String(n) : n.toFixed(1);
 }
 
+function drawHeartPath(ctx, x, y, w, h) {
+  ctx.beginPath();
+  ctx.moveTo(x + w * 0.5, y + h);
+  ctx.bezierCurveTo(x + w * 0.08, y + h * 0.76, x - w * 0.02, y + h * 0.44, x + w * 0.23, y + h * 0.24);
+  ctx.bezierCurveTo(x + w * 0.23, y + h * 0.02, x + w * 0.45, y + h * 0.02, x + w * 0.5, y + h * 0.21);
+  ctx.bezierCurveTo(x + w * 0.55, y + h * 0.02, x + w * 0.77, y + h * 0.02, x + w * 0.77, y + h * 0.24);
+  ctx.bezierCurveTo(x + w * 1.02, y + h * 0.44, x + w * 0.92, y + h * 0.76, x + w * 0.5, y + h);
+  ctx.closePath();
+}
+
+function drawCoverImage(ctx, img, x, y, w, h) {
+  const iw = img.naturalWidth || img.width || 1;
+  const ih = img.naturalHeight || img.height || 1;
+  const scale = Math.max(w / iw, h / ih);
+  const dw = iw * scale;
+  const dh = ih * scale;
+  const dx = x + (w - dw) / 2;
+  const dy = y + (h - dh) / 2;
+  ctx.drawImage(img, dx, dy, dw, dh);
+}
+
+function waitForImage(img) {
+  if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    img.onload = () => resolve();
+    img.onerror = () => reject(new Error("image-load-failed"));
+  });
+}
+
+async function downloadProfileCardImage() {
+  if (!latestRecommendation || !petProfileImage.src) {
+    alert("먼저 카드를 만들어주세요.");
+    return;
+  }
+
+  try {
+    await waitForImage(petProfileImage);
+  } catch {
+    alert("사진을 불러오지 못했어요. 다시 시도해 주세요.");
+    return;
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 1080;
+  canvas.height = 1400;
+  const ctx = canvas.getContext("2d");
+
+  const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  bg.addColorStop(0, "#fff7fb");
+  bg.addColorStop(1, "#ffeef6");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.strokeStyle = "#f4d5e3";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.roundRect(60, 60, 960, 1280, 40);
+  ctx.fill();
+  ctx.stroke();
+
+  const frameX = 240;
+  const frameY = 150;
+  const frameW = 600;
+  const frameH = 550;
+
+  const frameGrad = ctx.createLinearGradient(frameX, frameY, frameX + frameW, frameY + frameH);
+  frameGrad.addColorStop(0, "#ff9ec4");
+  frameGrad.addColorStop(1, "#ff74ab");
+  ctx.fillStyle = frameGrad;
+  drawHeartPath(ctx, frameX, frameY, frameW, frameH);
+  ctx.fill();
+
+  const inset = 26;
+  const innerX = frameX + inset;
+  const innerY = frameY + inset;
+  const innerW = frameW - inset * 2;
+  const innerH = frameH - inset * 2;
+
+  ctx.save();
+  drawHeartPath(ctx, innerX, innerY, innerW, innerH);
+  ctx.clip();
+  drawCoverImage(ctx, petProfileImage, innerX, innerY, innerW, innerH);
+  ctx.restore();
+
+  ctx.fillStyle = "#d43478";
+  ctx.font = "700 56px Pretendard, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(petProfileTitle.textContent || "사랑하는 뚜다미, 아이이름", canvas.width / 2, 820);
+
+  ctx.fillStyle = "#5b3045";
+  ctx.font = "500 40px Pretendard, sans-serif";
+  const lines = (petProfileMeta.textContent || "").split("/");
+  let textY = 910;
+  lines.forEach((line) => {
+    ctx.fillText(line, canvas.width / 2, textY);
+    textY += 66;
+  });
+
+  const dataUrl = canvas.toDataURL("image/png");
+  const a = document.createElement("a");
+  a.href = dataUrl;
+  a.download = `toutdam-profile-card-${Date.now()}.png`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
 sizeForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -197,6 +306,8 @@ makeProfileCardBtn.addEventListener("click", () => {
     `${latestRecommendation.size}사이즈 착용`;
   petProfileCard.hidden = false;
 });
+
+downloadProfileCardBtn.addEventListener("click", downloadProfileCardImage);
 
 toggleChartImageBtn.addEventListener("click", toggleChartImage);
 
