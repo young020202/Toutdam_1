@@ -208,10 +208,10 @@ async function downloadProfileCardImage() {
   ctx.fill();
   ctx.stroke();
 
-  const frameX = 190;
-  const frameY = 130;
-  const frameW = 700;
-  const frameH = 640;
+  const frameX = 240;
+  const frameY = 150;
+  const frameW = 600;
+  const frameH = 550;
 
   const frameGrad = ctx.createLinearGradient(frameX, frameY, frameX + frameW, frameY + frameH);
   frameGrad.addColorStop(0, "#ff9ec4");
@@ -239,10 +239,12 @@ async function downloadProfileCardImage() {
 
   ctx.fillStyle = "#5b3045";
   ctx.font = "500 40px Pretendard, sans-serif";
-  const infoLine = `${formatMeasure(latestRecommendation.weight)}kg/가슴둘레${formatMeasure(latestRecommendation.chest)}cm/목둘레${formatMeasure(latestRecommendation.neck)}cm/등길이${formatMeasure(latestRecommendation.backLength)}cm`;
-  const sizeLine = `${latestRecommendation.size}사이즈 착용`;
-  ctx.fillText(infoLine, canvas.width / 2, 910);
-  ctx.fillText(sizeLine, canvas.width / 2, 980);
+  const lines = (petProfileMeta.textContent || "").split("/");
+  let textY = 910;
+  lines.forEach((line) => {
+    ctx.fillText(line, canvas.width / 2, textY);
+    textY += 66;
+  });
 
   const fileName = `toutdam-profile-card-${Date.now()}.png`;
   const dataUrl = canvas.toDataURL("image/png");
